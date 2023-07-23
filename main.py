@@ -1,13 +1,9 @@
 ##########################################################################
-# Title: Patience can Pay
+# Title: Kings and Serfs
 # Author: Preston Brubaker
-# Revised: 7/22/23
-# Purpose: To demonstrate the effect of rate of food into an environment
-#          can affect the rate of metabolism in a group of organisms.
-# Method: Organisms will the following parameters: rate of food consumption,
-#         and reproduction ratio (ratio of internal food given to an offspring)
-#         and reproduciton chance (chance of splitting if above the global
-#         minimum requirement
+# Revised: 7/23/23
+# Purpose: To find the equilibrium conditions of herbivores and
+#          carnivores or to search for dynamic equilibriums
 ############################################################################
 
 import random
