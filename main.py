@@ -33,9 +33,9 @@ rep_req = 1000         # Amount of food needed to reproduce
 it_c = 0            # Iteration count
 met_rate = 0.001        # Rate of food use by organisms when food is around
 org_c = 10000    # Initial organisms to be generated and later the index of the organisms ever generated
-death_age = 10000     # Age at which an organism is killed
+death_age = 100000     # Age at which an organism is killed
 rand_death_chance = 0.0001    #chance of random death
-carn_eff = .01       #carnivore efficiency
+carn_eff = .02       #carnivore efficiency
 global hist_int
 hist_int = 100
 
@@ -77,15 +77,15 @@ def sim_loop():
             while j == idx and escape <= 1000:
                 j = random.randint(0,len(org_id) - 1)
                 escape += 1
-            if(org_carn[j] + 0.1 > random.uniform(0,1)):
-                food_trans = org_carn[idx] * org_food[j] * carn_eff
-                org_food[idx] += food_trans
-                org_food[j] -= food_trans
+
+            food_trans = org_carn[idx] * org_food[j] * carn_eff
+            org_food[idx] += food_trans
+            org_food[j] -= food_trans
 
         # Food lost
         org_food[idx] = org_food[idx] - loss_linear
         # Write the death note
-        if org_food[idx] < 0 or org_age[idx] > death_age or random.uniform(0,1) < rand_death_chance:
+        if org_food[idx] < 0 or org_age[idx] / death_age > random.uniform(0,1) or random.uniform(0,1) < rand_death_chance:
             death_note[idx] = True
 
     # Execute the weak and old
@@ -123,6 +123,19 @@ def sim_loop():
     return food, org_c
 
 
+# Function to get user input for the next interval
+def get_next_interval():
+    global hist_int
+    while True:
+        user_input = input("Enter the next interval for the histogram: ")
+        if user_input.isdigit():
+            hist_int = int(user_input)
+            break
+        else:
+            print("Invalid input. Please enter a valid integer.")
+
+
+
 # Initialize
 print(gen_orgs())
 
@@ -130,8 +143,9 @@ print(gen_orgs())
 while True:
 
     # Histogram
-    if (it_c % int(hist_int) == 0):
-        hist_int = int(input("Enter the next interval for the histogram: "))
+    if (it_c % hist_int == 0):
+        # Get user input for the next interval
+        get_next_interval()
         plt.figure()
         plt.hist(org_carn, bins=100, edgecolor='black')
         plt.title('Organism Carnivore Histogram   Iteration: ' + str(it_c))
@@ -144,6 +158,9 @@ while True:
         plt.hist(org_mut_frac, bins=100, edgecolor='black')
         plt.title('Organism Mutation Rate Histogram   Iteration: ' + str(it_c))
 
+        plt.figure()
+        plt.hist(org_age, bins=100, edgecolor='black')
+        plt.title('Organism Age Histogram   Iteration: ' + str(it_c))
 
         plt.show()
 
